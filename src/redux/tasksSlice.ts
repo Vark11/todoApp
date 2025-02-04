@@ -10,13 +10,13 @@ export interface TaskT {
 
 export interface TasksState {
   tasks: TaskT[];
-  status: "idle" | "loading" | "failed"
+  status: "all" | "active" | "completed"
 }
 
 // Define the initial value for the slice state
 const initialState: TasksState = {
   tasks: [],
-  status: "idle",
+  status: "all",
 }
 
 // Slices contain Redux reducer logic for updating state, and
@@ -26,22 +26,64 @@ export const tasksSlice = createSlice({
   initialState,
   
   reducers: {
+    
+    // добавить task
     add: (state, action: PayloadAction<string>) => {
-      state.tasks.push({
-        id: state.tasks.length,
-        task: action.payload,
-        completed: false,
-      });
+      if (state.tasks.length !== 0) {
+        state.tasks.push({
+          id: state.tasks[state.tasks.length - 1].id + 1,
+          task: action.payload,
+          completed: false,
+        });
+      } else {
+        state.tasks.push({
+          id: 0,
+          task: action.payload,
+          completed: false,
+        });
+      }
     },
 
+    // удалить таск
     del: (state, action: PayloadAction<number>) => {
-      state.tasks.splice(action.payload, 1);
+      for (const obj of state.tasks) {
+        if (obj.id === action.payload) {
+          const index = state.tasks.indexOf(obj);
+
+          state.tasks.splice(index, 1);
+          break;
+        }
+      }
+    },
+
+    // сделать задание "выполненным"
+    complete: (state, action: PayloadAction<number>) => {
+      for (const obj of state.tasks) {
+        if (obj.id === action.payload) {
+          obj.completed = !obj.completed;
+          break;
+        }
+      }
+    },
+
+    // изменить название таск'а
+    change: (state, action: PayloadAction<string>) => {
+      for (const obj of state.tasks) {
+        if (obj.id === Number(action.payload.split("#")[0])) {
+          obj.task = action.payload.split("#")[1];
+          break;
+        }
+      }
+    },
+
+    statusChange: (state, action: PayloadAction<"all" | "active" | "completed">) => {
+      state.status = action.payload;
     }
   },
 })
 
 // Export the generated action creators for use in components
-export const { add, del } = tasksSlice.actions
+export const { add, del, complete, change, statusChange } = tasksSlice.actions
 
 // Export the slice reducer for use in the store configuration
 export default tasksSlice.reducer

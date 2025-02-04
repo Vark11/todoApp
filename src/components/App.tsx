@@ -1,14 +1,13 @@
-import { TodosText } from './TodosText'
-import { MainBlock } from './MainBlock'
+import { TodosText } from "./TodosText";
+import { MainBlock } from "./MainBlock";
 
 function App() {
-
   return (
-    <main className='main'>
+    <main className="main">
       <TodosText />
       <MainBlock />
     </main>
-  )
+  );
 }
 
-export default App
+export default App;

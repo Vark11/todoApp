@@ -1,9 +1,5 @@
-
-
 const TodosText = () => {
-  return (
-    <div className="todos-text">todos</div>
-  );
-}
+  return <div className="todos-text">todos</div>;
+};
 
 export { TodosText };
